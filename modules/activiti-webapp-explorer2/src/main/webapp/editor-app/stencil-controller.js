@@ -296,7 +296,9 @@ angular.module('activitiModeler')
                             {
                             	continue;
                             }
-
+                            if(key === 'oryx-servicetaskclass' && selectedShape.properties[key] === ""){
+                                selectedShape.properties[key] = ACTIVITI.REACTORE_CONFIG.DEFAULT_SERVICE_CLASS_NAME;
+                            }
                             var currentProperty = {
                                 'key': key,
                                 'title': property.title(),

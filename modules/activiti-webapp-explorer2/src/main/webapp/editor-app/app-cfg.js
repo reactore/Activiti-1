@@ -21,5 +21,10 @@
 var ACTIVITI = ACTIVITI || {};
 
 ACTIVITI.CONFIG = {
-	'contextRoot' : '/activiti-explorer/service',
+	'contextRoot' : '/activiti-explorer/service'
+};
+ACTIVITI.REACTORE_CONFIG = {
+	'DEFAULT_SERVICE_CLASS_NAME': 'com.reactore.workflow.feature.activitilink.RestCall',
+	'COMMON_SERVER_URL' : "http://192.168.1.165:90/common/",
+    'WORKFLOW_SERVER_URL':'http://192.168.1.165:90/workflow/'
 };

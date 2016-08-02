@@ -7,29 +7,56 @@ function getParameterByName(name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-const COMMON_SERVER_URL = "http://192.168.1.165:90/common/";
-const WORKFLOW_SERVER_URL = "http://192.168.1.165:90/workflow/";
-// const ASSET_SERVER_URL = "http://192.168.1.165:90/asset/";
-// const AT_SERVER_URL = "http://192.168.1.165:90/at/";
-// const BUDGET_SERVER_URL = "http://192.168.1.165:90/budget/";
-// const HR_SERVER_URL = "http://192.168.1.165:90/hr/";
-// const HS_SERVER_URL = "http://192.168.1.165:90/hs/";
-// const PRODUCTION_SERVER_URL = "http://192.168.1.165:90/production/";
-// const PROCESSING_SERVER_URL = "http://192.168.1.165:90/processing/";
-// const SD_SERVER_URL = "http://192.168.1.165/sd/";
 const MAGIC_STRINGS = { MODULES: "modules", MODULES_METADATA: "moduleDeployments", ENTITY_TYPES: "entityTypes" };
 const API_CONTEXT_ROUTES = { MODULES: "modules", ENTITY_TYPES: "entityTypes/moduleId/", SERVICE_REGISTRY: "serviceRegistry/module/" };
 
 angular.module('activitiModeler')
     .run(["$http", bootstrap])
+    .service('rtEventsService', ["$q", "$rootScope", rtEventsService])
     .service('rtEntityCacheApi', [rtEntityCacheApi])
     .service('rtEntitySelectorApi', ["$http", "$q", "rtEntityCacheApi", rtEntitySelectorApi])
     .directive('rtEntitySelector', ["rtEntitySelectorApi", rtEntitySelector])
-    .directive('rtEntityApiSelector', ["rtEntitySelectorApi", rtEntityApiSelector]);
+    .directive('rtEntityApiSelector', ["rtEntitySelectorApi", "eventsService", rtEntityApiSelector]);
 
 function bootstrap($http) {
     var apiKey = getParameterByName("apiKey");
     $http.defaults.headers.common.apiKey = apiKey;
+}
+
+function rtEventsService($q, $rootScope) {
+    return {
+        publish: function (name, args) {
+            if (!$rootScope.$$listeners[name]) {
+                return new Array();
+            }
+            var deferred = new Array();
+            for (var i = 0; i < $rootScope.$$listeners[name].length; i++) {
+                deferred.push($q.defer());
+            }
+            var eventArgs = {
+                args: args,
+                reject: function (a) {
+                    deferred.pop().reject(a);
+                },
+                resolve: function (a) {
+                    deferred.pop().resolve(a);
+                }
+            };
+            $rootScope.$broadcast(name, eventArgs);
+            var promises = deferred.map(function (p) {
+                return p.promise;
+            });
+            return promises;
+        },
+        subscribe: function (name, callback) {
+            return $rootScope.$on(name, callback);
+        },
+        unsubscribe: function (handle) {
+            if (angular.isFunction(handle)) {
+                handle();
+            }
+        }
+    };
 }
 
 function rtEntityCacheApi() {
@@ -89,7 +116,8 @@ function rtEntitySelectorApi($http, $q, rtEntityCacheApi) {
         if (modulesFromCache && modulesFromCache.length > 0) {
             deferred.resolve(modulesFromCache[0].value);
         } else {
-            $http.get(COMMON_SERVER_URL + API_CONTEXT_ROUTES.MODULES).success(function (response) {
+            var url = ACTIVITI.REACTORE_CONFIG.COMMON_SERVER_URL + API_CONTEXT_ROUTES.MODULES;
+            $http.get(url).success(function (response) {
                 rtEntityCacheApi.insertIntoCache(MAGIC_STRINGS.MODULES, response);
                 deferred.resolve(response);
             }).error(function (error) {
@@ -105,7 +133,7 @@ function rtEntitySelectorApi($http, $q, rtEntityCacheApi) {
         if (modulesMetadataFromCache && modulesMetadataFromCache.length > 0) {
             deferred.resolve(modulesMetadataFromCache[0].value);
         } else {
-            var url = COMMON_SERVER_URL + "moduleDeployments";
+            var url = ACTIVITI.REACTORE_CONFIG.COMMON_SERVER_URL + "moduleDeployments";
             $http.get(url).success(function (response) {
                 rtEntityCacheApi.insertIntoCache(MAGIC_STRINGS.MODULES_METADATA, response);
                 deferred.resolve(response);
@@ -122,7 +150,7 @@ function rtEntitySelectorApi($http, $q, rtEntityCacheApi) {
         if (moduleEntityTypesFromCache && moduleEntityTypesFromCache.length > 0) {
             deferred.resolve(moduleEntityTypesFromCache[0].entityTypes);
         } else {
-            var url = COMMON_SERVER_URL + API_CONTEXT_ROUTES.ENTITY_TYPES + moduleId;
+            var url = ACTIVITI.REACTORE_CONFIG.COMMON_SERVER_URL + API_CONTEXT_ROUTES.ENTITY_TYPES + moduleId;
             $http.get(url).success(function (response) {
                 rtEntityCacheApi.insertModuleEntityTypesIntoCache(moduleId, response);
                 deferred.resolve(response);
@@ -135,7 +163,7 @@ function rtEntitySelectorApi($http, $q, rtEntityCacheApi) {
 
     this.getEntityApis = function (moduleId, entityTypeId) {
         var deferred = $q.defer();
-        var url = WORKFLOW_SERVER_URL + API_CONTEXT_ROUTES.SERVICE_REGISTRY + moduleId + "/entityType/" + entityTypeId;
+        var url = ACTIVITI.REACTORE_CONFIG.WORKFLOW_SERVER_URL + API_CONTEXT_ROUTES.SERVICE_REGISTRY + moduleId + "/entityType/" + entityTypeId;
         $http.get(url).success(function (response) {
             deferred.resolve(response);
         }).error(function (error) {
@@ -273,7 +301,7 @@ function rtEntitySelector(rtEntitySelectorApi) {
     };
 }
 
-function rtEntityApiSelector(rtEntitySelectorApi) {
+function rtEntityApiSelector(rtEntitySelectorApi, eventsService) {
     var apiSelectorTemplate = '<div class="form-group">' +
         '<label for="module">Module</label>' +
         '<select id="module" class="form-control" ng-model="selectedModuleId" ng-change="moduleChanged()">' +
@@ -353,7 +381,15 @@ function rtEntityApiSelector(rtEntitySelectorApi) {
             }
         };
         scope.apiChanged = function () {
-            console.log("Selected api changed " + scope.selectedApiId);
+            if (scope.selectedApiId) {
+                console.log("Selected api changed " + scope.selectedApiId);
+                var newApi = scope.apis.filter(function (selectedApi) {
+                    return selectedApi.id == scope.selectedApiId;
+                })[0];
+                var url = newApi.url;
+                var params = url.match(/[^{}]+(?=\})/g);
+                eventsService.publish("onApiSelected", { params: params });
+            }
         };
         init();
     }
@@ -368,7 +404,6 @@ function rtEntityApiSelector(rtEntitySelectorApi) {
         link: link
     };
 }
-
 
 function rtEntitySelectorMockApi($http, $q) {
     var entityTypes = [{ id: 1, name: "Employee", api: "employees" }, { id: 2, name: "Department", api: "departments" }];

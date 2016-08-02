@@ -33,7 +33,7 @@ var KisBpmFormPropertiesCtrl = [ '$scope', '$modal', '$timeout', '$translate', f
     $modal(opts);
 }];
 
-var KisBpmFormPropertiesPopupCtrl = ['$scope', '$q', '$translate', '$timeout', function($scope, $q, $translate, $timeout) {
+var KisBpmFormPropertiesPopupCtrl = ['$scope', '$q', '$translate', '$timeout','rtEventsService', function($scope, $q, $translate, $timeout, rtEventsService) {
 
     // Put json representing form properties on scope
     if ($scope.property.value !== undefined && $scope.property.value !== null
@@ -272,5 +272,25 @@ var KisBpmFormPropertiesPopupCtrl = ['$scope', '$q', '$translate', '$timeout', f
     	$scope.$hide();
     	$scope.property.mode = 'read';
     };
+
+    var onApiSelectedSubscription = rtEventsService.subscribe("onApiSelected", function(event, data) {
+        const KEY = "_AUTO_GENERATED";
+        var newVariables = $scope.formProperties.filter(function(formProperty) {
+            return formProperty.name.indexOf(KEY) <= 0;
+        });
+        $scope.formProperties = newVariables;
+        if(data.args.params) {
+            data.args.params.forEach(function(param) {
+                $scope.formProperties.push({ id : param,
+                name : param + KEY,
+                type : 'string',
+                readable: true,
+                writable: true});
+            });
+        }
+    });
+    $scope.$on("$destroy",function() {
+        rtEventsService.unsubscribe(onApiSelectedSubscription);
+    });
 
 }];
