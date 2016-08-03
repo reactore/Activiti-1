@@ -16,7 +16,7 @@ angular.module('activitiModeler')
     .service('rtEntityCacheApi', [rtEntityCacheApi])
     .service('rtEntitySelectorApi', ["$http", "$q", "rtEntityCacheApi", rtEntitySelectorApi])
     .directive('rtEntitySelector', ["rtEntitySelectorApi", rtEntitySelector])
-    .directive('rtEntityApiSelector', ["rtEntitySelectorApi", "eventsService", rtEntityApiSelector]);
+    .directive('rtEntityApiSelector', ["rtEntitySelectorApi", "rtEventsService", rtEntityApiSelector]);
 
 function bootstrap($http) {
     var apiKey = getParameterByName("apiKey");
@@ -301,7 +301,7 @@ function rtEntitySelector(rtEntitySelectorApi) {
     };
 }
 
-function rtEntityApiSelector(rtEntitySelectorApi, eventsService) {
+function rtEntityApiSelector(rtEntitySelectorApi, rtEventsService) {
     var apiSelectorTemplate = '<div class="form-group">' +
         '<label for="module">Module</label>' +
         '<select id="module" class="form-control" ng-model="selectedModuleId" ng-change="moduleChanged()">' +
@@ -388,7 +388,7 @@ function rtEntityApiSelector(rtEntitySelectorApi, eventsService) {
                 })[0];
                 var url = newApi.url;
                 var params = url.match(/[^{}]+(?=\})/g);
-                eventsService.publish("onApiSelected", { params: params });
+                rtEventsService.publish("onApiSelected", { params: params });
             }
         };
         init();
