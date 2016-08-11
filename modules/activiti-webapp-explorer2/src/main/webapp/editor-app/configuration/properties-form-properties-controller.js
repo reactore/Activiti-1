@@ -140,10 +140,13 @@ var KisBpmFormPropertiesPopupCtrl = ['$scope', '$q', '$translate', '$timeout','r
     // Click handler for remove button
     $scope.removeProperty = function() {
         if ($scope.selectedProperties.length > 0) {
+            if ($scope.selectedProperties[0].type === "api") {
+                rtEventsService.publish("onApiSelected");
+            }
             var index = $scope.formProperties.indexOf($scope.selectedProperties[0]);
             $scope.gridOptions.selectItem(index, false);
             $scope.formProperties.splice(index, 1);
-
+            
             $scope.selectedProperties.length = 0;
             if (index < $scope.formProperties.length) {
                 $scope.gridOptions.selectItem(index + 1, true);
@@ -279,18 +282,13 @@ var KisBpmFormPropertiesPopupCtrl = ['$scope', '$q', '$translate', '$timeout','r
             return formProperty.name.indexOf(KEY) <= 0;
         });
         $scope.formProperties = newVariables;
-        if(data.args.params) {
+        if (data.args && data.args.params) {
             data.args.params.forEach(function(param) {
-                $scope.formProperties.push({ id : param,
-                name : param + KEY,
-                type : 'string',
-                readable: true,
-                writable: true});
+                $scope.formProperties.push({ id : param, name : param + KEY, type : 'string', readable: true, writable: true});
             });
         }
     });
     $scope.$on("$destroy",function() {
         rtEventsService.unsubscribe(onApiSelectedSubscription);
     });
-
 }];
