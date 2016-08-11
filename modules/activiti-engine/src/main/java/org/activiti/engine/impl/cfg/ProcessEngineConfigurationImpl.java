@@ -121,14 +121,7 @@ import org.activiti.engine.impl.event.EventHandler;
 import org.activiti.engine.impl.event.MessageEventHandler;
 import org.activiti.engine.impl.event.SignalEventHandler;
 import org.activiti.engine.impl.event.logger.EventLogger;
-import org.activiti.engine.impl.form.BooleanFormType;
-import org.activiti.engine.impl.form.DateFormType;
-import org.activiti.engine.impl.form.DoubleFormType;
-import org.activiti.engine.impl.form.FormEngine;
-import org.activiti.engine.impl.form.FormTypes;
-import org.activiti.engine.impl.form.JuelFormEngine;
-import org.activiti.engine.impl.form.LongFormType;
-import org.activiti.engine.impl.form.StringFormType;
+import org.activiti.engine.impl.form.*;
 import org.activiti.engine.impl.history.HistoryLevel;
 import org.activiti.engine.impl.history.parse.FlowNodeHistoryParseHandler;
 import org.activiti.engine.impl.history.parse.ProcessHistoryParseHandler;
@@ -1545,6 +1538,8 @@ public abstract class ProcessEngineConfigurationImpl extends ProcessEngineConfig
     if (formTypes==null) {
       formTypes = new FormTypes();
       formTypes.addFormType(new StringFormType());
+      formTypes.addFormType(new EntityFormType());
+      formTypes.addFormType(new ApiFormType());
       formTypes.addFormType(new LongFormType());
       formTypes.addFormType(new DateFormType("dd/MM/yyyy"));
       formTypes.addFormType(new BooleanFormType());

@@ -66,13 +66,17 @@ public class FormPropertyHandler implements Serializable {
 
     if (modelValue instanceof String) {
       formProperty.setValue((String) modelValue);
-    } else if (type != null) {
+    } else if (type != null && variableExpression == null) {
       String formValue = type.convertModelValueToFormValue(modelValue);
       formProperty.setValue(formValue);
     } else if (modelValue != null) {
       formProperty.setValue(modelValue.toString());
+    } else if (type != null) {
+      modelValue = variableExpression;
+//      String formValue = type.convertModelValueToFormValue(modelValue);
+      formProperty.setValue(modelValue.toString());
     }
-    
+
     return formProperty;
   }
 
