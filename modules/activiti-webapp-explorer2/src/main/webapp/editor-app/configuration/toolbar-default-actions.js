@@ -292,8 +292,8 @@ KISBPM.TOOLBAR = {
 };
 
 /** Custom controller for the save dialog */
-var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
-    function ($rootScope, $scope, $http, $route, $location) {
+var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location', 'rtWorkflowApi',
+    function ($rootScope, $scope, $http, $route, $location, rtWorkflowApi) {
 
     var modelMetaData = $scope.editor.getModelMetaData();
 
@@ -391,6 +391,8 @@ var SaveModelCtrl = [ '$rootScope', '$scope', '$http', '$route', '$location',
             url: KISBPM.URL.putModel(modelMetaData.modelId)})
 
             .success(function (data, status, headers, config) {
+                rtWorkflowApi.updateModel(modelMetaData.modelId)
+                .then(function(result) {}, function(error) { console.log("Failed to update model in reactore system " + error) });
                 $scope.editor.handleEvents({
                     type: ORYX.CONFIG.EVENT_SAVED
                 });

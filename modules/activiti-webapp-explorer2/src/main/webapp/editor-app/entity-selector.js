@@ -8,13 +8,14 @@ function getParameterByName(name) {
 }
 
 const MAGIC_STRINGS = { MODULES: "modules", MODULES_METADATA: "moduleDeployments", ENTITY_TYPES: "entityTypes" };
-const API_CONTEXT_ROUTES = { MODULES: "modules", ENTITY_TYPES: "entityTypes/moduleId/", SERVICE_REGISTRY: "serviceRegistry/module/" };
+const API_CONTEXT_ROUTES = { MODULES: "modules", ENTITY_TYPES: "entityTypes/moduleId/", SERVICE_REGISTRY: "serviceRegistry/module/", UPDATE_MODEL: "updateModel" };
 
 angular.module('activitiModeler')
     .run(["$http", bootstrap])
     .service('rtEventsService', ["$q", "$rootScope", rtEventsService])
     .service('rtEntityCacheApi', [rtEntityCacheApi])
     .service('rtEntitySelectorApi', ["$http", "$q", "rtEntityCacheApi", rtEntitySelectorApi])
+    .service('rtWorkflowApi', ["$http", "$q", rtWorkflowApi])
     .directive('rtEntitySelector', ["rtEntitySelectorApi", rtEntitySelector])
     .directive('rtEntityApiSelector', ["rtEntitySelectorApi", "rtEventsService", rtEntityApiSelector]);
 
@@ -204,6 +205,19 @@ function rtEntitySelectorApi($http, $q, rtEntityCacheApi) {
         });
         return deferred.promise;
     };
+}
+
+function rtWorkflowApi($http, $q) {
+    this.updateModel = function (modelerId) {
+        var deferred = $q.defer();
+        var url = ACTIVITI.REACTORE_CONFIG.WORKFLOW_SERVER_URL + API_CONTEXT_ROUTES.UPDATE_MODEL;
+        $http.post(url, { "modelerId": parseInt(modelerId) }).success(function (response) {
+            deferred.resolve(response);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+        return deferred.promise;
+    }
 }
 
 function rtEntitySelector(rtEntitySelectorApi) {
