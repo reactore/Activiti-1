@@ -8,7 +8,7 @@ function getParameterByName(name) {
 }
 
 const MAGIC_STRINGS = { MODULES: "modules", MODULES_METADATA: "moduleDeployments", ENTITY_TYPES: "entityTypes" };
-const API_CONTEXT_ROUTES = { MODULES: "modules", ENTITY_TYPES: "entityTypes/moduleId/", SERVICE_REGISTRY: "serviceRegistry/module/", UPDATE_MODEL: "updateModel" };
+const API_CONTEXT_ROUTES = { MODULES: "modules", ENTITY_TYPES: "entityTypes/moduleId/", SERVICE_REGISTRY: "serviceRegistry/", SERVICE_REGISTRY_MODULE: "serviceRegistry/module/", UPDATE_MODEL: "updateModel" };
 
 angular.module('activitiModeler')
     .run(["$http", bootstrap])
@@ -17,7 +17,8 @@ angular.module('activitiModeler')
     .service('rtEntitySelectorApi', ["$http", "$q", "rtEntityCacheApi", rtEntitySelectorApi])
     .service('rtWorkflowApi', ["$http", "$q", rtWorkflowApi])
     .directive('rtEntitySelector', ["rtEntitySelectorApi", rtEntitySelector])
-    .directive('rtEntityApiSelector', ["rtEntitySelectorApi", "rtEventsService", rtEntityApiSelector]);
+    .directive('rtEntityApiSelector', ["rtEntitySelectorApi", "rtEventsService", rtEntityApiSelector])
+    .directive('rtApiViewer', ["rtEntitySelectorApi", rtApiViewer]);
 
 function bootstrap($http) {
     var apiKey = getParameterByName("apiKey");
@@ -164,7 +165,18 @@ function rtEntitySelectorApi($http, $q, rtEntityCacheApi) {
 
     this.getEntityApis = function (moduleId, entityTypeId) {
         var deferred = $q.defer();
-        var url = ACTIVITI.REACTORE_CONFIG.WORKFLOW_SERVER_URL + API_CONTEXT_ROUTES.SERVICE_REGISTRY + moduleId + "/entityType/" + entityTypeId;
+        var url = ACTIVITI.REACTORE_CONFIG.WORKFLOW_SERVER_URL + API_CONTEXT_ROUTES.SERVICE_REGISTRY_MODULE + moduleId + "/entityType/" + entityTypeId;
+        $http.get(url).success(function (response) {
+            deferred.resolve(response);
+        }).error(function (error) {
+            deferred.reject(error);
+        });
+        return deferred.promise;
+    };
+
+    this.getApiDetails = function (apiId) {
+        var deferred = $q.defer();
+        var url = ACTIVITI.REACTORE_CONFIG.WORKFLOW_SERVER_URL + API_CONTEXT_ROUTES.SERVICE_REGISTRY + apiId;
         $http.get(url).success(function (response) {
             deferred.resolve(response);
         }).error(function (error) {
@@ -333,7 +345,11 @@ function rtEntityApiSelector(rtEntitySelectorApi, rtEventsService) {
         '<select id="api" class="form-control" ng-model="selectedApiId" ng-change="apiChanged()" ng-disabled="selectedEntityTypeId==null">' +
         '<option value="">-- choose Api --</option>' +
         '<option value="{{api.id}}" ng-selected="selectedApiId==api.id" ng-repeat="api in apis">{{api.friendlyApiName}}</option>' +
-        '</select></div>';
+        '</select></div>' +
+        '<div data-ng-if="selectedApiId" class="form-group">' +
+        '<label for="url">Api details:</label>' +
+        '<rt-api-viewer api-id="selectedApiId"></rt-api-viewer>' +
+        '</div>';
 
     function link(scope, element, attrs) {
         function getApiNameForEntityType(selectedEntityTypeId) {
@@ -417,6 +433,52 @@ function rtEntityApiSelector(rtEntitySelectorApi, rtEventsService) {
         template: apiSelectorTemplate,
         link: link
     };
+}
+
+function rtApiViewer(rtEntitySelectorApi) {
+    var apiViewerTemplate = '<div class="form-group">' +
+        '<label for="url">URL:</label>' +
+        '<label for="url">{{entityDetails.url}}</label>' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label for="url">Request type:</label>' +
+        '<label for="url">{{entityDetails.httpRequestType}}</label>' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label for="url">Payload:</label>' +
+        '<label for="url">{{entityDetails.payload}}</label>' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label for="url">Output:</label>' +
+        '<label for="url">{{entityDetails.output}}</label>' +
+        '</div>';
+    return {
+        restrict: 'E',
+        scope: {
+            apiId: '='
+        },
+        template: apiViewerTemplate,
+        link: link
+    };
+    function link(scope, element, attrs) {
+        function loadApiDetails(apiId) {
+            rtEntitySelectorApi.getApiDetails(apiId).then(function (data) {
+                scope.entityDetails = data;
+            }, function (error) {
+                console.log("Error occured during get api details");
+            });
+        }
+        function init() {
+            loadApiDetails(scope.apiId);
+        }
+        scope.$watch("apiId", onApiIdChange);
+        function onApiIdChange(newValue, oldValue) {
+            if (newValue != null && newValue !== undefined) {
+                loadApiDetails(newValue);
+            }
+        }
+        //init();
+    }
 }
 
 function rtEntitySelectorMockApi($http, $q) {
