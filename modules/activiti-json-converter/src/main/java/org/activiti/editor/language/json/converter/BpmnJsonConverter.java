@@ -54,7 +54,6 @@ import org.activiti.bpmn.model.ValuedDataObject;
 import org.activiti.editor.constants.EditorJsonConstants;
 import org.activiti.editor.constants.StencilConstants;
 import org.activiti.editor.language.json.converter.util.CollectionUtils;
-import org.activiti.editor.language.json.converter.util.FormTaskJsonConverter;
 import org.activiti.editor.language.json.converter.util.JsonConverterUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -106,7 +105,7 @@ public class BpmnJsonConverter implements EditorJsonConstants, StencilConstants,
         CamelTaskJsonConverter.fillTypes(convertersToBpmnMap, convertersToJsonMap);
         MuleTaskJsonConverter.fillTypes(convertersToBpmnMap, convertersToJsonMap);
         SendTaskJsonConverter.fillTypes(convertersToBpmnMap, convertersToJsonMap);
-        FormTaskJsonConverter.fillTypes(convertersToBpmnMap, convertersToJsonMap);
+        FormPropertiesTaskJsonConverter.fillTypes(convertersToBpmnMap, convertersToJsonMap);
 
         // gateways
         ExclusiveGatewayJsonConverter.fillTypes(convertersToBpmnMap, convertersToJsonMap);
@@ -176,6 +175,7 @@ public class BpmnJsonConverter implements EditorJsonConstants, StencilConstants,
         DI_RECTANGLES.add(STENCIL_TASK_CAMEL);
         DI_RECTANGLES.add(STENCIL_TASK_MULE);
         DI_RECTANGLES.add(STENCIL_TEXT_ANNOTATION);
+        DI_RECTANGLES.add(STENCIL_TASK_FORM);
 
         DI_GATEWAY.add(STENCIL_GATEWAY_EVENT);
         DI_GATEWAY.add(STENCIL_GATEWAY_EXCLUSIVE);

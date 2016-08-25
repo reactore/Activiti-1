@@ -173,6 +173,8 @@ public class InitializeAlfrescoModelsConversionListener implements WorkflowDefin
 				resolvePropertyRefrencesInServiceTask((ServiceTask) element, modelNamespace, references);
 			} else if(element instanceof UserTask) {
 				addScriptListenersToUserTask((UserTask) element, conversion);
+			}else if(element instanceof FormPropertiesTask) {
+				addScriptListenersToFormPropertiesTask((FormPropertiesTask) element, conversion);
 			}
 		}
 		
@@ -200,7 +202,23 @@ public class InitializeAlfrescoModelsConversionListener implements WorkflowDefin
 					AlfrescoConversionConstants.TASK_LISTENER_EVENT_COMPLETE).build());
 		}
   }
-	
+
+	protected void addScriptListenersToFormPropertiesTask(FormPropertiesTask formpropertiesTask, WorkflowDefinitionConversion conversion) {
+		// Add create-script-listener if it has been used in this conversion
+		if(AlfrescoConversionUtil.hasTaskScriptTaskListenerBuilder(conversion, formpropertiesTask.getId(),
+				AlfrescoConversionConstants.TASK_LISTENER_EVENT_CREATE)) {
+			formpropertiesTask.getTaskListeners().add(AlfrescoConversionUtil.getScriptTaskListenerBuilder(conversion, formpropertiesTask.getId(),
+					AlfrescoConversionConstants.TASK_LISTENER_EVENT_CREATE).build());
+		}
+
+		// Add complete-script-listener if it has been used in this conversion
+		if(AlfrescoConversionUtil.hasTaskScriptTaskListenerBuilder(conversion, formpropertiesTask.getId(),
+				AlfrescoConversionConstants.TASK_LISTENER_EVENT_COMPLETE)) {
+			formpropertiesTask.getTaskListeners().add(AlfrescoConversionUtil.getScriptTaskListenerBuilder(conversion, formpropertiesTask.getId(),
+					AlfrescoConversionConstants.TASK_LISTENER_EVENT_COMPLETE).build());
+		}
+	}
+
 	protected void resolvePropertyRefrencesInSequenceFlow(SequenceFlow sequenceFlow, M2Namespace modelNamespace, List<PropertyReference> references) {
 		if(sequenceFlow.getConditionExpression() != null && PropertyReference.containsPropertyReference(sequenceFlow.getConditionExpression())) {
 			sequenceFlow.setConditionExpression(PropertyReference.replaceAllPropertyReferencesInString(sequenceFlow.getConditionExpression(), modelNamespace.getPrefix(), references, false));

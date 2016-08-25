@@ -26,34 +26,8 @@ import org.activiti.bpmn.converter.export.ActivitiListenerExport;
 import org.activiti.bpmn.converter.export.FailedJobRetryCountExport;
 import org.activiti.bpmn.converter.export.MultiInstanceExport;
 import org.activiti.bpmn.converter.util.BpmnXMLUtil;
-import org.activiti.bpmn.model.Activity;
-import org.activiti.bpmn.model.Artifact;
-import org.activiti.bpmn.model.BaseElement;
-import org.activiti.bpmn.model.BpmnModel;
-import org.activiti.bpmn.model.CancelEventDefinition;
-import org.activiti.bpmn.model.CompensateEventDefinition;
-import org.activiti.bpmn.model.DataObject;
-import org.activiti.bpmn.model.ErrorEventDefinition;
-import org.activiti.bpmn.model.Event;
-import org.activiti.bpmn.model.EventDefinition;
-import org.activiti.bpmn.model.ExtensionAttribute;
-import org.activiti.bpmn.model.ExtensionElement;
-import org.activiti.bpmn.model.FlowElement;
-import org.activiti.bpmn.model.FlowNode;
-import org.activiti.bpmn.model.FormProperty;
-import org.activiti.bpmn.model.FormValue;
-import org.activiti.bpmn.model.Gateway;
-import org.activiti.bpmn.model.MessageEventDefinition;
+import org.activiti.bpmn.model.*;
 import org.activiti.bpmn.model.Process;
-import org.activiti.bpmn.model.SequenceFlow;
-import org.activiti.bpmn.model.SignalEventDefinition;
-import org.activiti.bpmn.model.StartEvent;
-import org.activiti.bpmn.model.SubProcess;
-import org.activiti.bpmn.model.TerminateEventDefinition;
-import org.activiti.bpmn.model.ThrowEvent;
-import org.activiti.bpmn.model.TimerEventDefinition;
-import org.activiti.bpmn.model.UserTask;
-import org.activiti.bpmn.model.ValuedDataObject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -325,6 +299,8 @@ public abstract class BaseBpmnXMLConverter implements BpmnXMLConstants {
     List<FormProperty> propertyList = null;
     if (flowElement instanceof UserTask) {
       propertyList = ((UserTask) flowElement).getFormProperties();
+    }else  if (flowElement instanceof FormPropertiesTask) {
+      propertyList = ((FormPropertiesTask) flowElement).getFormProperties();
     } else if (flowElement instanceof StartEvent) {
       propertyList = ((StartEvent) flowElement).getFormProperties();
     }

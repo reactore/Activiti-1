@@ -826,6 +826,10 @@ public class DefaultProcessDiagramCanvas {
     drawTask(USERTASK_IMAGE, name, graphicInfo, scaleFactor);
   }
 
+  public void drawFormPropertiesTask(String name, GraphicInfo graphicInfo, double scaleFactor) {
+    drawTask(USERTASK_IMAGE, name, graphicInfo, scaleFactor);
+  }
+
   public void drawScriptTask(String name, GraphicInfo graphicInfo, double scaleFactor) {
     drawTask(SCRIPTTASK_IMAGE, name, graphicInfo, scaleFactor);
   }

@@ -142,6 +142,7 @@ public interface BpmnXMLConstants {
   public static final String ELEMENT_TASK_SERVICE = "serviceTask";
   public static final String ELEMENT_TASK_USER = "userTask";
   public static final String ELEMENT_CALL_ACTIVITY = "callActivity";
+  public static final String ELEMENT_FORM_PROPERTIES_TASK_USER = "formPropertiesTask";
   
   public static final String ATTRIBUTE_EVENT_START_INITIATOR = "initiator";
   public static final String ATTRIBUTE_FORM_FORMKEY = "formKey";

@@ -15,25 +15,7 @@ package org.activiti.engine.impl.history.parse;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.activiti.bpmn.model.BaseElement;
-import org.activiti.bpmn.model.BoundaryEvent;
-import org.activiti.bpmn.model.BusinessRuleTask;
-import org.activiti.bpmn.model.CallActivity;
-import org.activiti.bpmn.model.EndEvent;
-import org.activiti.bpmn.model.EventGateway;
-import org.activiti.bpmn.model.ExclusiveGateway;
-import org.activiti.bpmn.model.InclusiveGateway;
-import org.activiti.bpmn.model.IntermediateCatchEvent;
-import org.activiti.bpmn.model.ManualTask;
-import org.activiti.bpmn.model.ParallelGateway;
-import org.activiti.bpmn.model.ReceiveTask;
-import org.activiti.bpmn.model.ScriptTask;
-import org.activiti.bpmn.model.SendTask;
-import org.activiti.bpmn.model.ServiceTask;
-import org.activiti.bpmn.model.SubProcess;
-import org.activiti.bpmn.model.Task;
-import org.activiti.bpmn.model.ThrowEvent;
-import org.activiti.bpmn.model.UserTask;
+import org.activiti.bpmn.model.*;
 import org.activiti.engine.impl.bpmn.parser.BpmnParse;
 import org.activiti.engine.impl.history.handler.ActivityInstanceEndHandler;
 import org.activiti.engine.impl.history.handler.ActivityInstanceStartHandler;
@@ -70,7 +52,8 @@ public class FlowNodeHistoryParseHandler implements BpmnParseHandler {
     supportedElementClasses.add(BusinessRuleTask.class);
     supportedElementClasses.add(SendTask.class);
     supportedElementClasses.add(UserTask.class);
-    
+    supportedElementClasses.add(FormPropertiesTask.class);
+
     supportedElementClasses.add(CallActivity.class);
     supportedElementClasses.add(SubProcess.class);
   }

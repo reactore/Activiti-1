@@ -67,4 +67,12 @@ public abstract class BaseAlfrescoFormPropertyConverter implements AlfrescoFormP
 		}
 	  return null;
   }
+  protected String getFormPropertiesTaskIdWithFormkey(String contentType, Process process) {
+		for(FlowElement flowElement : process.getFlowElements()) {
+			if(flowElement instanceof FormPropertiesTask && contentType.equals(((FormPropertiesTask) flowElement).getFormKey())) {
+				return flowElement.getId();
+			}
+		}
+	  return null;
+  }
 }

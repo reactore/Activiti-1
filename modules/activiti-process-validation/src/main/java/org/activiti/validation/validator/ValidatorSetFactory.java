@@ -12,32 +12,7 @@
  */
 package org.activiti.validation.validator;
 
-import org.activiti.validation.validator.impl.ActivitiEventListenerValidator;
-import org.activiti.validation.validator.impl.AssociationValidator;
-import org.activiti.validation.validator.impl.BoundaryEventValidator;
-import org.activiti.validation.validator.impl.DataObjectValidator;
-import org.activiti.validation.validator.impl.DiagramInterchangeInfoValidator;
-import org.activiti.validation.validator.impl.EndEventValidator;
-import org.activiti.validation.validator.impl.ErrorValidator;
-import org.activiti.validation.validator.impl.EventGatewayValidator;
-import org.activiti.validation.validator.impl.EventSubprocessValidator;
-import org.activiti.validation.validator.impl.EventValidator;
-import org.activiti.validation.validator.impl.ExclusiveGatewayValidator;
-import org.activiti.validation.validator.impl.ExecutionListenerValidator;
-import org.activiti.validation.validator.impl.FlowElementValidator;
-import org.activiti.validation.validator.impl.IntermediateCatchEventValidator;
-import org.activiti.validation.validator.impl.IntermediateThrowEventValidator;
-import org.activiti.validation.validator.impl.MessageValidator;
-import org.activiti.validation.validator.impl.OperationValidator;
-import org.activiti.validation.validator.impl.BpmnModelValidator;
-import org.activiti.validation.validator.impl.ScriptTaskValidator;
-import org.activiti.validation.validator.impl.SendTaskValidator;
-import org.activiti.validation.validator.impl.SequenceflowValidator;
-import org.activiti.validation.validator.impl.ServiceTaskValidator;
-import org.activiti.validation.validator.impl.SignalValidator;
-import org.activiti.validation.validator.impl.StartEventValidator;
-import org.activiti.validation.validator.impl.SubprocessValidator;
-import org.activiti.validation.validator.impl.UserTaskValidator;
+import org.activiti.validation.validator.impl.*;
 
 /**
  * @author jbarrez
@@ -72,7 +47,8 @@ public class ValidatorSetFactory {
 		validatorSet.addValidator(new MessageValidator());
 		validatorSet.addValidator(new EventValidator());
 		validatorSet.addValidator(new EndEventValidator());
-		
+		validatorSet.addValidator(new FormPropertiesTaskValidator());
+
 		validatorSet.addValidator(new ExecutionListenerValidator());
 		validatorSet.addValidator(new ActivitiEventListenerValidator());
 		

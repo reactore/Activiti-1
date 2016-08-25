@@ -16,39 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.activiti.bpmn.model.Activity;
-import org.activiti.bpmn.model.Artifact;
-import org.activiti.bpmn.model.Association;
-import org.activiti.bpmn.model.BaseElement;
-import org.activiti.bpmn.model.BoundaryEvent;
-import org.activiti.bpmn.model.BpmnModel;
-import org.activiti.bpmn.model.DataAssociation;
-import org.activiti.bpmn.model.DataStoreReference;
-import org.activiti.bpmn.model.ErrorEventDefinition;
-import org.activiti.bpmn.model.Event;
-import org.activiti.bpmn.model.EventDefinition;
-import org.activiti.bpmn.model.ExtensionElement;
-import org.activiti.bpmn.model.FieldExtension;
-import org.activiti.bpmn.model.FlowElement;
-import org.activiti.bpmn.model.FlowElementsContainer;
-import org.activiti.bpmn.model.FlowNode;
-import org.activiti.bpmn.model.FormProperty;
-import org.activiti.bpmn.model.FormValue;
-import org.activiti.bpmn.model.Gateway;
-import org.activiti.bpmn.model.GraphicInfo;
-import org.activiti.bpmn.model.Lane;
-import org.activiti.bpmn.model.MessageEventDefinition;
-import org.activiti.bpmn.model.MessageFlow;
-import org.activiti.bpmn.model.MultiInstanceLoopCharacteristics;
+import org.activiti.bpmn.model.*;
 import org.activiti.bpmn.model.Process;
-import org.activiti.bpmn.model.SequenceFlow;
-import org.activiti.bpmn.model.ServiceTask;
-import org.activiti.bpmn.model.SignalEventDefinition;
-import org.activiti.bpmn.model.StartEvent;
-import org.activiti.bpmn.model.SubProcess;
-import org.activiti.bpmn.model.TerminateEventDefinition;
-import org.activiti.bpmn.model.TimerEventDefinition;
-import org.activiti.bpmn.model.UserTask;
 import org.activiti.editor.constants.EditorJsonConstants;
 import org.activiti.editor.constants.StencilConstants;
 import org.activiti.editor.language.json.converter.util.CollectionUtils;
@@ -176,6 +145,10 @@ public abstract class BaseBpmnJsonConverter implements EditorJsonConstants, Sten
 
             if (activity instanceof UserTask) {
                 BpmnJsonConverterUtil.convertListenersToJson(((UserTask) activity).getTaskListeners(), false, propertiesNode);
+            }
+
+            if (activity instanceof FormPropertiesTask) {
+                BpmnJsonConverterUtil.convertListenersToJson(((FormPropertiesTask) activity).getTaskListeners(), false, propertiesNode);
             }
 
             BpmnJsonConverterUtil.convertListenersToJson(activity.getExecutionListeners(), true, propertiesNode);
@@ -552,6 +525,8 @@ public abstract class BaseBpmnJsonConverter implements EditorJsonConstants, Sten
                             ((StartEvent) element).getFormProperties().add(formProperty);
                         } else if (element instanceof UserTask) {
                             ((UserTask) element).getFormProperties().add(formProperty);
+                        } else if (element instanceof FormPropertiesTask) {
+                            ((FormPropertiesTask) element).getFormProperties().add(formProperty);
                         }
                     }
                 }

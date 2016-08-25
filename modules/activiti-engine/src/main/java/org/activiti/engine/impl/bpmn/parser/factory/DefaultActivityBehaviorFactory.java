@@ -14,69 +14,10 @@ package org.activiti.engine.impl.bpmn.parser.factory;
 
 import java.util.List;
 
-import org.activiti.bpmn.model.BoundaryEvent;
-import org.activiti.bpmn.model.BpmnModel;
-import org.activiti.bpmn.model.BusinessRuleTask;
-import org.activiti.bpmn.model.CallActivity;
-import org.activiti.bpmn.model.CancelEventDefinition;
-import org.activiti.bpmn.model.EndEvent;
-import org.activiti.bpmn.model.ErrorEventDefinition;
-import org.activiti.bpmn.model.EventGateway;
-import org.activiti.bpmn.model.ExclusiveGateway;
-import org.activiti.bpmn.model.FieldExtension;
-import org.activiti.bpmn.model.IOParameter;
-import org.activiti.bpmn.model.InclusiveGateway;
-import org.activiti.bpmn.model.IntermediateCatchEvent;
-import org.activiti.bpmn.model.ManualTask;
-import org.activiti.bpmn.model.MapExceptionEntry;
-import org.activiti.bpmn.model.ParallelGateway;
-import org.activiti.bpmn.model.ReceiveTask;
-import org.activiti.bpmn.model.ScriptTask;
-import org.activiti.bpmn.model.SendTask;
-import org.activiti.bpmn.model.ServiceTask;
-import org.activiti.bpmn.model.Signal;
-import org.activiti.bpmn.model.StartEvent;
-import org.activiti.bpmn.model.SubProcess;
-import org.activiti.bpmn.model.Task;
-import org.activiti.bpmn.model.TaskWithFieldExtensions;
-import org.activiti.bpmn.model.ThrowEvent;
-import org.activiti.bpmn.model.Transaction;
-import org.activiti.bpmn.model.UserTask;
+import org.activiti.bpmn.model.*;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.delegate.Expression;
-import org.activiti.engine.impl.bpmn.behavior.AbstractBpmnActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.BoundaryEventActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.BusinessRuleTaskActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.CallActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.CancelBoundaryEventActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.CancelEndEventActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.ErrorEndEventActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.EventBasedGatewayActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.EventSubProcessStartEventActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.ExclusiveGatewayActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.InclusiveGatewayActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.IntermediateCatchEventActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.IntermediateThrowCompensationEventActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.IntermediateThrowNoneEventActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.IntermediateThrowSignalEventActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.MailActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.ManualTaskActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.NoneEndEventActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.NoneStartEventActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.ParallelGatewayActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.ParallelMultiInstanceBehavior;
-import org.activiti.engine.impl.bpmn.behavior.ReceiveTaskActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.ScriptTaskActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.SequentialMultiInstanceBehavior;
-import org.activiti.engine.impl.bpmn.behavior.ServiceTaskDelegateExpressionActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.ServiceTaskExpressionActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.ShellActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.SubProcessActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.TaskActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.TerminateEndEventActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.TransactionActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.UserTaskActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.WebServiceActivityBehavior;
+import org.activiti.engine.impl.bpmn.behavior.*;
 import org.activiti.engine.impl.bpmn.data.SimpleDataInputAssociation;
 import org.activiti.engine.impl.bpmn.helper.ClassDelegate;
 import org.activiti.engine.impl.bpmn.parser.CompensateEventDefinition;
@@ -128,6 +69,9 @@ public class DefaultActivityBehaviorFactory extends AbstractBehaviorFactory impl
     return new UserTaskActivityBehavior(userTask.getId(), taskDefinition);
   }
 
+  public FormPropertiesTaskActivityBehavior createFormPropertiesTaskActivityBehavior(FormPropertiesTask formPropertiesTask, TaskDefinition taskDefinition) {
+    return new FormPropertiesTaskActivityBehavior(formPropertiesTask.getId(), taskDefinition);
+  }
   // Service task
   
   public ClassDelegate createClassDelegateServiceTask(ServiceTask serviceTask) {

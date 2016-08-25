@@ -75,35 +75,7 @@ import org.activiti.engine.impl.bpmn.parser.factory.ActivityBehaviorFactory;
 import org.activiti.engine.impl.bpmn.parser.factory.DefaultActivityBehaviorFactory;
 import org.activiti.engine.impl.bpmn.parser.factory.DefaultListenerFactory;
 import org.activiti.engine.impl.bpmn.parser.factory.ListenerFactory;
-import org.activiti.engine.impl.bpmn.parser.handler.BoundaryEventParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.BusinessRuleParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.CallActivityParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.CancelEventDefinitionParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.CompensateEventDefinitionParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.EndEventParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.ErrorEventDefinitionParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.EventBasedGatewayParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.EventSubProcessParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.ExclusiveGatewayParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.InclusiveGatewayParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.IntermediateCatchEventParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.IntermediateThrowEventParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.ManualTaskParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.MessageEventDefinitionParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.ParallelGatewayParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.ProcessParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.ReceiveTaskParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.ScriptTaskParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.SendTaskParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.SequenceFlowParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.ServiceTaskParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.SignalEventDefinitionParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.StartEventParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.SubProcessParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.TaskParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.TimerEventDefinitionParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.TransactionParseHandler;
-import org.activiti.engine.impl.bpmn.parser.handler.UserTaskParseHandler;
+import org.activiti.engine.impl.bpmn.parser.handler.*;
 import org.activiti.engine.impl.bpmn.webservice.MessageInstance;
 import org.activiti.engine.impl.calendar.BusinessCalendarManager;
 import org.activiti.engine.impl.calendar.CycleBusinessCalendar;
@@ -123,10 +95,7 @@ import org.activiti.engine.impl.event.SignalEventHandler;
 import org.activiti.engine.impl.event.logger.EventLogger;
 import org.activiti.engine.impl.form.*;
 import org.activiti.engine.impl.history.HistoryLevel;
-import org.activiti.engine.impl.history.parse.FlowNodeHistoryParseHandler;
-import org.activiti.engine.impl.history.parse.ProcessHistoryParseHandler;
-import org.activiti.engine.impl.history.parse.StartEventHistoryParseHandler;
-import org.activiti.engine.impl.history.parse.UserTaskHistoryParseHandler;
+import org.activiti.engine.impl.history.parse.*;
 import org.activiti.engine.impl.interceptor.CommandConfig;
 import org.activiti.engine.impl.interceptor.CommandContextFactory;
 import org.activiti.engine.impl.interceptor.CommandContextInterceptor;
@@ -1263,7 +1232,8 @@ public abstract class ProcessEngineConfigurationImpl extends ProcessEngineConfig
     bpmnParserHandlers.add(new TimerEventDefinitionParseHandler());
     bpmnParserHandlers.add(new TransactionParseHandler());
     bpmnParserHandlers.add(new UserTaskParseHandler());
-    
+    bpmnParserHandlers.add(new FormPropertiesTaskParseHandler());
+
     // Replace any default handler if the user wants to replace them
     if (customDefaultBpmnParseHandlers != null) {
       
@@ -1309,6 +1279,7 @@ public abstract class ProcessEngineConfigurationImpl extends ProcessEngineConfig
     parseHandlers.add(new ProcessHistoryParseHandler());
     parseHandlers.add(new StartEventHistoryParseHandler());
     parseHandlers.add(new UserTaskHistoryParseHandler());
+    parseHandlers.add(new FormPropertiesTaskHistoryParseHandler());
     return parseHandlers;
   }
 

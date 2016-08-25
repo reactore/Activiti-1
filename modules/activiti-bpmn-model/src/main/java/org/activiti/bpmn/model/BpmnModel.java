@@ -45,9 +45,9 @@ public class BpmnModel {
 	protected Map<String, String> namespaceMap = new LinkedHashMap<String, String>();
 	protected String targetNamespace;
 	protected List<String> userTaskFormTypes;
-  protected List<String> startEventFormTypes;
+    protected List<String> startEventFormTypes;
 	protected int nextFlowIdCounter = 1;
-	
+    protected List<String> formPropertiesTaskFormTypes;
 	
 	public Map<String, List<ExtensionAttribute>> getDefinitionsAttributes() {
     return definitionsAttributes;
@@ -546,4 +546,13 @@ public class BpmnModel {
   public void setStartEventFormTypes(List<String> startEventFormTypes) {
     this.startEventFormTypes = startEventFormTypes;
   }
+
+    public List<String> getFormPropertiesTaskFormTypes() {
+        return formPropertiesTaskFormTypes;
+    }
+
+    public void setFormPropertiesTaskFormTypes(List<String> formPropertiesTaskFormTypes) {
+        this.formPropertiesTaskFormTypes = formPropertiesTaskFormTypes;
+    }
+
 }

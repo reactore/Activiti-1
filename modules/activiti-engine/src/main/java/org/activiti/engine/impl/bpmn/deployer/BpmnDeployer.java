@@ -23,13 +23,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.activiti.bpmn.constants.BpmnXMLConstants;
-import org.activiti.bpmn.model.BpmnModel;
-import org.activiti.bpmn.model.ExtensionElement;
-import org.activiti.bpmn.model.FlowElement;
+import org.activiti.bpmn.model.*;
 import org.activiti.bpmn.model.Process;
-import org.activiti.bpmn.model.SubProcess;
-import org.activiti.bpmn.model.UserTask;
-import org.activiti.bpmn.model.ValuedDataObject;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.DynamicBpmnConstants;
 import org.activiti.engine.DynamicBpmnService;
@@ -531,7 +526,7 @@ public class BpmnDeployer implements Deployer {
     DynamicBpmnService dynamicBpmnService = commandContext.getProcessEngineConfiguration().getDynamicBpmnService();
     
     for (FlowElement flowElement : flowElements) {
-      if (flowElement instanceof UserTask || flowElement instanceof SubProcess) {
+      if (flowElement instanceof UserTask ||flowElement instanceof FormPropertiesTask || flowElement instanceof SubProcess) {
         List<ExtensionElement> localizationElements = flowElement.getExtensionElements().get("localization");
         if (localizationElements != null) {
           for (ExtensionElement localizationElement : localizationElements) {

@@ -18,13 +18,7 @@ import java.util.List;
 
 import org.activiti.workflow.simple.converter.listener.DefaultWorkflowDefinitionConversionListener;
 import org.activiti.workflow.simple.converter.listener.WorkflowDefinitionConversionListener;
-import org.activiti.workflow.simple.converter.step.ChoiceStepsDefinitionConverter;
-import org.activiti.workflow.simple.converter.step.DelayStepDefinitionConverter;
-import org.activiti.workflow.simple.converter.step.FeedbackStepDefinitionConverter;
-import org.activiti.workflow.simple.converter.step.HumanStepDefinitionConverter;
-import org.activiti.workflow.simple.converter.step.ParallelStepsDefinitionConverter;
-import org.activiti.workflow.simple.converter.step.ScriptStepDefinitionConverter;
-import org.activiti.workflow.simple.converter.step.StepDefinitionConverter;
+import org.activiti.workflow.simple.converter.step.*;
 import org.activiti.workflow.simple.definition.StepDefinition;
 import org.activiti.workflow.simple.definition.WorkflowDefinition;
 
@@ -63,6 +57,7 @@ public class WorkflowDefinitionConversionFactory {
     converters.add(new FeedbackStepDefinitionConverter());
     converters.add(new ScriptStepDefinitionConverter());
     converters.add(new DelayStepDefinitionConverter());
+    converters.add(new FormPropertiesTaskStepDefinitionConverter());
     setDefaultStepDefinitionConverters(converters);
   }
   

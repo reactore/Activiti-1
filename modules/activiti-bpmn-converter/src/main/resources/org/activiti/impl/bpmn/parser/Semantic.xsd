@@ -803,6 +803,18 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
+	<xsd:element name="globalFormPropertiesTask" type="tGlobalFormPropertiesTask" substitutionGroup="rootElement"/>
+	<xsd:complexType name="tGlobalFormPropertiesTask">
+		<xsd:complexContent>
+			<xsd:extension base="tGlobalTask">
+				<xsd:sequence>
+					<xsd:element ref="rendering" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+				<xsd:attribute name="implementation" type="tImplementation" default="##unspecified"/>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
 	<xsd:element name="group" type="tGroup" substitutionGroup="artifact"/>
 	<xsd:complexType name="tGroup">
 		<xsd:complexContent>
@@ -1551,6 +1563,19 @@
 
 	<xsd:element name="userTask" type="tUserTask" substitutionGroup="flowElement"/>
 	<xsd:complexType name="tUserTask">
+		<xsd:complexContent>
+			<xsd:extension base="tTask">
+				<xsd:sequence>
+					<xsd:element ref="rendering" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+				<xsd:attribute name="implementation" type="tImplementation" default="##unspecified"/>
+				<xsd:attribute name="skipExpression" type="xsd:string" use="optional"/>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="formPropertiesTask" type="tFormPropertiesTask" substitutionGroup="flowElement"/>
+	<xsd:complexType name="tFormPropertiesTask">
 		<xsd:complexContent>
 			<xsd:extension base="tTask">
 				<xsd:sequence>

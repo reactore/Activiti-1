@@ -18,13 +18,8 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.activiti.bpmn.constants.BpmnXMLConstants;
 import org.activiti.bpmn.converter.util.BpmnXMLUtil;
-import org.activiti.bpmn.model.ActivitiListener;
-import org.activiti.bpmn.model.BaseElement;
-import org.activiti.bpmn.model.EventListener;
-import org.activiti.bpmn.model.HasExecutionListeners;
-import org.activiti.bpmn.model.ImplementationType;
+import org.activiti.bpmn.model.*;
 import org.activiti.bpmn.model.Process;
-import org.activiti.bpmn.model.UserTask;
 import org.apache.commons.lang3.StringUtils;
 
 public class ActivitiListenerExport implements BpmnXMLConstants {
@@ -37,7 +32,11 @@ public class ActivitiListenerExport implements BpmnXMLConstants {
     if (element instanceof UserTask) {
       didWriteExtensionStartElement = writeListeners(ELEMENT_TASK_LISTENER, ((UserTask) element).getTaskListeners(), didWriteExtensionStartElement, xtw);
     }
-    
+
+      if (element instanceof FormPropertiesTask) {
+          didWriteExtensionStartElement = writeListeners(ELEMENT_TASK_LISTENER, ((FormPropertiesTask) element).getTaskListeners(), didWriteExtensionStartElement, xtw);
+      }
+
     // In case of a process-element, write the event-listeners
     if (element instanceof Process) {
     	didWriteExtensionStartElement = writeEventListeners(((Process) element).getEventListeners(), didWriteExtensionStartElement, xtw);

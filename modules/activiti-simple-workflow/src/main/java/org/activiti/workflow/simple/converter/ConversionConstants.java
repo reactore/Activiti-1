@@ -25,5 +25,6 @@ public interface ConversionConstants {
   String SCRIPT_TASK_ID_PREFIX = "scriptTask";
   String SERVICE_TASK_ID_PREFIX = "serviceTask";
   String INTERMEDIATE_EVENT_ID_PREVIX = "intermediateEvent";
+  String FORM_PROPERTIES_TASK_ID_PREFIX = "formPropertiesTask";
 
 }

@@ -47,7 +47,7 @@ public interface StencilConstants {
   final String STENCIL_TASK_CAMEL = "CamelTask";
   final String STENCIL_TASK_MULE = "MuleTask";
   final String STENCIL_TASK_SHELL = "ShellTask";
-  final String STENCIL_TASK_FORM = "FormTask";
+  final String STENCIL_TASK_FORM = "FormPropertiesTask";
 
   final String STENCIL_GATEWAY_EXCLUSIVE = "ExclusiveGateway";
   final String STENCIL_GATEWAY_PARALLEL = "ParallelGateway";

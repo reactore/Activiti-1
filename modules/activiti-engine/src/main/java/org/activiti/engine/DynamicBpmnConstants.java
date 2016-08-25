@@ -41,4 +41,12 @@ public interface DynamicBpmnConstants {
   String LOCALIZATION_LANGUAGE = "language";
   String LOCALIZATION_NAME = "name";
   String LOCALIZATION_DESCRIPTION = "description";
+
+
+  String FORM_PROPERTIES_TASK_NAME = "formPropertiesTaskName";
+  String FORM_PROPERTIES_TASK_DESCRIPTION = "formPropertiesTaskDescription";
+  String FORM_PROPERTIES_TASK_DUEDATE = "formPropertiesTaskDueDate";
+  String FORM_PROPERTIES_TASK_PRIORITY = "formPropertiesTaskPriority";
+  String FORM_PROPERTIES_TASK_CATEGORY = "formPropertiesTaskCategory";
+  String FORM_PROPERTIES_TASK_FORM_KEY = "formPropertiesTaskFormKey";
 }

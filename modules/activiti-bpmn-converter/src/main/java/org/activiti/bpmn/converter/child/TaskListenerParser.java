@@ -14,6 +14,7 @@ package org.activiti.bpmn.converter.child;
 
 import org.activiti.bpmn.model.ActivitiListener;
 import org.activiti.bpmn.model.BaseElement;
+import org.activiti.bpmn.model.FormPropertiesTask;
 import org.activiti.bpmn.model.UserTask;
 
 /**
@@ -28,6 +29,8 @@ public class TaskListenerParser extends ActivitiListenerParser {
   public void addListenerToParent(ActivitiListener listener, BaseElement parentElement) {
     if (parentElement instanceof UserTask) {
       ((UserTask) parentElement).getTaskListeners().add(listener);
+    } else  if (parentElement instanceof FormPropertiesTask) {
+      ((FormPropertiesTask) parentElement).getTaskListeners().add(listener);
     }
   }
 }
