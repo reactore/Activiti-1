@@ -142,6 +142,7 @@ var KisBpmFormPropertiesPopupCtrl = ['$scope', '$q', '$translate', '$timeout','r
         if ($scope.selectedProperties.length > 0) {
             if ($scope.selectedProperties[0].type === "api") {
                 rtEventsService.publish("onApiSelected");
+                rtEventsService.publish("onApiSelected", { formPropertyId: $scope.selectedProperties[0].id });
             }
             var index = $scope.formProperties.indexOf($scope.selectedProperties[0]);
             $scope.gridOptions.selectItem(index, false);
