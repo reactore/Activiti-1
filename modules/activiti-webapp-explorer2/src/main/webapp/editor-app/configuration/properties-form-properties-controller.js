@@ -277,14 +277,14 @@ var KisBpmFormPropertiesPopupCtrl = ['$scope', '$q', '$translate', '$timeout','r
     };
 
     var onApiSelectedSubscription = rtEventsService.subscribe("onApiSelected", function(event, data) {
-        const KEY = "_AUTO_GENERATED";
+        const KEY = data.args.formPropertyId + "_";
         var newVariables = $scope.formProperties.filter(function(formProperty) {
-            return formProperty.name.indexOf(KEY) <= 0;
+            return formProperty.id.indexOf(KEY) < 0;
         });
         $scope.formProperties = newVariables;
         if (data.args && data.args.params) {
             data.args.params.forEach(function(param) {
-                $scope.formProperties.push({ id : param, name : param + KEY, type : 'string', readable: true, writable: true});
+                $scope.formProperties.push({ id : KEY + param, name : param, type : 'string', readable: true, writable: true});
             });
         }
     });

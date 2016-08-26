@@ -418,7 +418,7 @@ function rtEntityApiSelector(rtEntitySelectorApi, rtEventsService) {
                 })[0];
                 var url = newApi.url;
                 var params = url.match(/[^{}]+(?=\})/g);
-                rtEventsService.publish("onApiSelected", { params: params });
+                rtEventsService.publish("onApiSelected", { params: params, formPropertyId: scope.formPropertyId });
             }
         };
         init();
@@ -428,7 +428,8 @@ function rtEntityApiSelector(rtEntitySelectorApi, rtEventsService) {
         scope: {
             selectedModuleId: '=',
             selectedEntityTypeId: '=',
-            selectedApiId: '='
+            selectedApiId: '=',
+            formPropertyId: '='
         },
         template: apiSelectorTemplate,
         link: link
