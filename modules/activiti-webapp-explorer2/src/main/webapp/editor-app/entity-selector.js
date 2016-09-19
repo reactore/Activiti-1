@@ -163,10 +163,11 @@ function rtEntitySelectorApi($http, $q, rtEntityCacheApi) {
         return deferred.promise;
     };
 
-    this.getEntityApis = function (moduleId, entityTypeId) {
+    this.getEntityApis = function (moduleId, entityTypeName) {
         var deferred = $q.defer();
-        var url = ACTIVITI.REACTORE_CONFIG.WORKFLOW_SERVER_URL + API_CONTEXT_ROUTES.SERVICE_REGISTRY_MODULE + moduleId + "/entityType/" + entityTypeId;
-        $http.get(url).success(function (response) {
+        var url = ACTIVITI.REACTORE_CONFIG.WORKFLOW_SERVER_URL + API_CONTEXT_ROUTES.SERVICE_REGISTRY + "registryByEntityType";
+        var entity = {"moduleId": parseInt(moduleId), "entityType":entityTypeName};
+        $http.post(url,entity).success(function (response) {
             deferred.resolve(response);
         }).error(function (error) {
             deferred.reject(error);
@@ -243,7 +244,7 @@ function rtEntitySelector(rtEntitySelectorApi) {
         '<label for="entityType">Entity type</label>' +
         '<select id="entityType" class="form-control" ng-model="selectedEntityTypeId" ng-change="entityTypeChanged()" ng-disabled="selectedModuleId==null">' +
         '<option value="">-- choose entity type--</option>' +
-        '<option value="{{entityType.id}}" ng-selected="selectedEntityTypeId==entityType.id" ng-repeat="entityType in entityTypes">{{entityType.name}}</option>' +
+        '<option value="{{entityType.name}}" ng-selected="selectedEntityTypeId==entityType.name" ng-repeat="entityType in entityTypes">{{entityType.name}}</option>' +
         '</select></div>' +
         '<div class="form-group">' +
         '<label for="entity">Entity</label>' +
@@ -338,7 +339,7 @@ function rtEntityApiSelector(rtEntitySelectorApi, rtEventsService) {
         '<label for="entityType">Entity type</label>' +
         '<select id="entityType" class="form-control" ng-model="selectedEntityTypeId" ng-change="entityTypeChanged()" ng-disabled="selectedModuleId==null">' +
         '<option value="">-- choose entity type--</option>' +
-        '<option value="{{entityType.id}}" ng-selected="selectedEntityTypeId==entityType.id" ng-repeat="entityType in entityTypes">{{entityType.name}}</option>' +
+        '<option value="{{entityType.name}}" ng-selected="selectedEntityTypeId==entityType.name" ng-repeat="entityType in entityTypes">{{entityType.name}}</option>' +
         '</select></div>' +
         '<div class="form-group">' +
         '<label for="api">Api</label>' +
@@ -377,8 +378,8 @@ function rtEntityApiSelector(rtEntitySelectorApi, rtEventsService) {
                 console.log("Error occured during get entity types");
             });
         }
-        function loadApis(moduleId, entityTypeId) {
-            rtEntitySelectorApi.getEntityApis(moduleId, entityTypeId).then(function (data) {
+        function loadApis(moduleId, entityTypeName) {
+            rtEntitySelectorApi.getEntityApis(moduleId, entityTypeName).then(function (data) {
                 scope.apis = data;
             }, function (error) {
                 console.log("Error loading entities");
