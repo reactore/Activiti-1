@@ -8,7 +8,10 @@ function getParameterByName(name) {
 }
 
 const MAGIC_STRINGS = { MODULES: "modules", MODULES_METADATA: "moduleDeployments", ENTITY_TYPES: "entityTypes" };
-const API_CONTEXT_ROUTES = { MODULES: "modules", ENTITY_TYPES: "entityTypes/moduleId/", SERVICE_REGISTRY: "serviceRegistry/", SERVICE_REGISTRY_MODULE: "serviceRegistry/module/", UPDATE_MODEL: "updateModel" };
+const API_CONTEXT_ROUTES = {
+    MODULES: "modules", ENTITY_TYPES: "entityTypes/moduleId/", SERVICE_REGISTRY: "serviceRegistries/", SERVICE_REGISTRY_MODULE: "serviceRegistry/module/",
+    UPDATE_MODEL: "updateModel", SERVICE_UUID: "serviceUUID"
+};
 
 angular.module('activitiModeler')
     .run(["$http", bootstrap])
@@ -165,9 +168,9 @@ function rtEntitySelectorApi($http, $q, rtEntityCacheApi) {
 
     this.getEntityApis = function (moduleId, entityTypeName) {
         var deferred = $q.defer();
-        var url = ACTIVITI.REACTORE_CONFIG.WORKFLOW_SERVER_URL + API_CONTEXT_ROUTES.SERVICE_REGISTRY + "registryByEntityType";
-        var entity = {"moduleId": parseInt(moduleId), "entityType":entityTypeName};
-        $http.post(url,entity).success(function (response) {
+        var url = ACTIVITI.REACTORE_CONFIG.COMMON_SERVER_URL + API_CONTEXT_ROUTES.SERVICE_REGISTRY + "registryByEntityType";
+        var entity = { "moduleId": parseInt(moduleId), "entityTypeName": entityTypeName };
+        $http.post(url, entity).success(function (response) {
             deferred.resolve(response);
         }).error(function (error) {
             deferred.reject(error);
@@ -177,8 +180,8 @@ function rtEntitySelectorApi($http, $q, rtEntityCacheApi) {
 
     this.getApiDetails = function (apiId) {
         var deferred = $q.defer();
-        var url = ACTIVITI.REACTORE_CONFIG.WORKFLOW_SERVER_URL + API_CONTEXT_ROUTES.SERVICE_REGISTRY + apiId;
-        $http.get(url).success(function (response) {
+        var url = ACTIVITI.REACTORE_CONFIG.COMMON_SERVER_URL + API_CONTEXT_ROUTES.SERVICE_REGISTRY + API_CONTEXT_ROUTES.SERVICE_UUID;
+        $http.post(url, { "serviceUUID": apiId }).success(function (response) {
             deferred.resolve(response);
         }).error(function (error) {
             deferred.reject(error);
@@ -345,7 +348,7 @@ function rtEntityApiSelector(rtEntitySelectorApi, rtEventsService) {
         '<label for="api">Api</label>' +
         '<select id="api" class="form-control" ng-model="selectedApiId" ng-change="apiChanged()" ng-disabled="selectedEntityTypeId==null">' +
         '<option value="">-- choose Api --</option>' +
-        '<option value="{{api.id}}" ng-selected="selectedApiId==api.id" ng-repeat="api in apis">{{api.friendlyApiName}}</option>' +
+        '<option value="{{api.serviceUUID}}" ng-selected="selectedApiId==api.serviceUUID" ng-repeat="api in apis">{{api.friendlyApiName}}</option>' +
         '</select></div>' +
         '<div data-ng-if="selectedApiId" class="form-group">' +
         '<label for="url">Api details:</label>' +
@@ -415,7 +418,7 @@ function rtEntityApiSelector(rtEntitySelectorApi, rtEventsService) {
             if (scope.selectedApiId) {
                 console.log("Selected api changed " + scope.selectedApiId);
                 var newApi = scope.apis.filter(function (selectedApi) {
-                    return selectedApi.id == scope.selectedApiId;
+                    return selectedApi.serviceUUID == scope.selectedApiId;
                 })[0];
                 var url = newApi.url;
                 var params = url.match(/[^{}]+(?=\})/g);
