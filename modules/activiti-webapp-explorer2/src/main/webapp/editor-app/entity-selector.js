@@ -7,9 +7,9 @@ function getParameterByName(name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-const MAGIC_STRINGS = { MODULES: "modules", MODULES_METADATA: "moduleDeployments", ENTITY_TYPES: "entityTypes" };
+const MAGIC_STRINGS = { MODULES: "modules", MODULES_METADATA: "moduleDeployments", ENTITY_TYPES: "dataEntities" };
 const API_CONTEXT_ROUTES = {
-    MODULES: "modules", ENTITY_TYPES: "entityTypes/moduleId/", SERVICE_REGISTRY: "serviceRegistries/", SERVICE_REGISTRY_MODULE: "serviceRegistry/module/",
+    MODULES: "modules", ENTITY_TYPES: "dataEntities/module/", SERVICE_REGISTRY: "serviceRegistries/", SERVICE_REGISTRY_MODULE: "serviceRegistry/module/",
     UPDATE_MODEL: "updateModel", SERVICE_UUID: "serviceUUID"
 };
 
@@ -191,7 +191,7 @@ function rtEntitySelectorApi($http, $q, rtEntityCacheApi) {
 
     function getApiNameFromModulesMetadata(modulesMetadata, entityType) {
         var moduleUrl = modulesMetadata.filter(function (modulesMetadata) {
-            return modulesMetadata.moduleId == entityType.moduleId;
+            return modulesMetadata.moduleId == entityType.moduleId && modulesMetadata.urlTypeId == 900000000000001;
         })[0].serverUrl;
         return moduleUrl + entityType.basePath;
     }
@@ -259,7 +259,7 @@ function rtEntitySelector(rtEntitySelectorApi) {
     function link(scope, element, attrs) {
         function getEntityType(selectedEntityTypeId) {
             return scope.entityTypes.filter(function (entityType) {
-                return entityType.id == selectedEntityTypeId;
+                return entityType.name == selectedEntityTypeId;
             })[0];
         }
         function loadModules() {
@@ -348,7 +348,7 @@ function rtEntityApiSelector(rtEntitySelectorApi, rtEventsService) {
         '<label for="api">Api</label>' +
         '<select id="api" class="form-control" ng-model="selectedApiId" ng-change="apiChanged()" ng-disabled="selectedEntityTypeId==null">' +
         '<option value="">-- choose Api --</option>' +
-        '<option value="{{api.serviceUUID}}" ng-selected="selectedApiId==api.serviceUUID" ng-repeat="api in apis">{{api.friendlyApiName}}</option>' +
+        '<option value="{{api.serviceUUID}}" ng-selected="selectedApiId==api.serviceUUID" ng-repeat="api in apis">{{api.description}}</option>' +
         '</select></div>' +
         '<div data-ng-if="selectedApiId" class="form-group">' +
         '<label for="url">Api details:</label>' +
